@@ -1,0 +1,14 @@
+{
+    "name": "codnet/phprasty",
+    "type": "library","version":"1.0.0",
+    "description": "Component-Driven framework for PHP",
+    "keywords": ["php", "framework", "components", "codnet"],
+    "homepage": "http://www.codnet.com.ar",
+    "license": "GPL v2",
+    "authors": [
+        {"name": "Bernardo Iribarne", "email": "ber.iribarne@gmail.com"}
+    ],
+    "autoload": {
+        "psr-0": { "Rasty": "src/main/php" }
+    }
+}
