@@ -43,6 +43,17 @@ class RastyConfig {
 	//extensiones de los templates.
 	private $templateExtension = 'htm' ;
 
+	/**
+	 * url para websocket
+	 * @var string
+	 */
+	private $websocketUrl ="";
+	
+	/**
+	 * port para websocket
+	 * @var string
+	 */
+	private $websocketPort ="8084";
 	
 	const RASTY_REQUEST_TYPE_PAGE = 1;
 	const RASTY_REQUEST_TYPE_JSON = 2;
@@ -134,5 +145,25 @@ class RastyConfig {
 	public function setTemplateExtension($templateExtension)
 	{
 	    $this->templateExtension = $templateExtension;
+	}
+
+	public function getWebsocketUrl()
+	{
+	    return $this->websocketUrl;
+	}
+
+	public function setWebsocketUrl($websocketUrl)
+	{
+	    $this->websocketUrl = $websocketUrl;
+	}
+
+	public function getWebsocketPort()
+	{
+	    return $this->websocketPort;
+	}
+
+	public function setWebsocketPort($websocketPort)
+	{
+	    $this->websocketPort = $websocketPort;
 	}
 }

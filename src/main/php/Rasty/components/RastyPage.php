@@ -127,6 +127,23 @@ abstract class RastyPage extends AbstractComponent{
 	protected function getObserverJs(){
 		$id = get_class($this);
 		$js = "<script>";
+		
+		//si se definió la url para comunicarse por websocket,
+		//definimos el observer.
+
+		$websocketUrl = RastyConfig::getInstance()->getWebsocketUrl();
+		$websocketPort = RastyConfig::getInstance()->getWebsocketPort();
+		if(!empty($websocketUrl)){
+			
+			//app observer
+			$js .= "if( !(typeof(window['appObserver']) != \"undefined\") ){";
+			$js .= "appObserver = new AppObserver(\"$websocketUrl\", $websocketPort);";
+			
+			$js .= "appObserver.listen( \"all\", subject.notifyServerChanges )";
+			$js .= "}";
+		}
+		
+		
 		//$js .= "$(document).ready(function(){";
 		$js .= "if( !(typeof(window['subject']) != \"undefined\") )";
 		$js .= "subject = new Subject(\"$id\")";
