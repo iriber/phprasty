@@ -68,7 +68,7 @@ abstract class RastyPage extends AbstractComponent{
 		return RastyConfig::getInstance()->getAppPath();
 	}
 	
-	public function getXTemplate(){
+	public function getXTemplate($file_template=null){
 		//debe renderizarse el componente y los componentes que contiente.
 		$file_template = $this->getRootPageTemplate() .  $this->getTemplateLocation();
 		

@@ -1,6 +1,8 @@
 <?php
 namespace Rasty\app;
 
+use Rasty\actions\Forward;
+
 use Rasty\utils\ReflectionUtils;
 
 /**
@@ -14,7 +16,7 @@ class ApplicationJson{
 	public function ApplicationJson(){
 	}
 	
-	public function execute(){
+	public function execute(Forward $forward=null){
 			
 		$path = $_GET['path'] ;
 		

@@ -26,7 +26,7 @@ class ApplicationComponent extends Application{
 	}
 	
 
-	public function execute(){
+	public function execute(Forward $forward=null){
 			
 		//tomamos el name ingresado
 		$name = RastyUtils::getParamGET( 'name' ) ;

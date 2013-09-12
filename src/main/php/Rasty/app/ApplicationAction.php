@@ -2,6 +2,7 @@
 namespace Rasty\app;
 
 use Rasty\utils\ReflectionUtils;
+use Rasty\actions\Forward;
 
 /**
  *  
@@ -14,7 +15,7 @@ class ApplicationAction{
 	public function __construct(){
 	}
 	
-	public function execute(){
+	public function execute(Forward $forward=null){
 			
 		$path = $_GET['path'] ;
 		
