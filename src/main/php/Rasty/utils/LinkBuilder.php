@@ -72,10 +72,20 @@ class LinkBuilder{
 	 * 
 	 * @param string $actionName
 	 */
-	public static function getActionAjaxUrl($actionName){
+	public static function getActionAjaxUrl($actionName, $params=null){
 		$map = RastyMapHelper::getInstance();
 		$webPath = RastyConfig::getInstance()->getWebPath();
-	    return $webPath . $map->getActionUrl( $actionName ) . self::$ajaxExtension;
+	    
+		$url = $webPath . $map->getActionUrl( $actionName ) . self::$ajaxExtension;
+		
+		if( !empty($params) ){
+			$url =  self::addParams( $url, $params );
+		}
+		 
+		return $url;
+		
+	    
+	    
 	}
 
 		
