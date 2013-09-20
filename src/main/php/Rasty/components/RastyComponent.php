@@ -67,11 +67,14 @@ abstract class RastyComponent extends AbstractComponent{
 						for ( var key in event.data) {
 							strParams = strParams + key + \"=\" + encodeURI(event.data[key]) + \"&\";
 						} 
-						
+						wait( \"#$id\" );
 						$.ajax({
 				  			url: \"$url?componentId={$componentId}&\" + strParams,
 				  			type: \"GET\",
 				  			cache: false,
+				  			complete: function(){
+				  				wakeUp( \"#$id\" );
+							},
 				  			success: function(content){
 								$( \"#$id\" ).html(content);
 				  			}
