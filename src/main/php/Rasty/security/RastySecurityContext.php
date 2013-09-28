@@ -58,6 +58,9 @@ class RastySecurityContext {
 	 */
 	static function authorizeComponent( RastyComponent $component ) {
 
+		if( !$component->isSecure() )
+			return true;
+		
 		$user = self::getUser();
 		
 		if( $user == null )

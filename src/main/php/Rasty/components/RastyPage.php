@@ -116,9 +116,7 @@ abstract class RastyPage extends AbstractComponent{
 	    $this->forward = $forward;
 	}
 	
-	public function isSecure(){
-		return true;
-	}
+	
 	
 	/**
 	 * retorna el javascript necesario para la implementación

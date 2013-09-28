@@ -23,6 +23,10 @@ abstract class AbstractComponent{
 	protected $components=array();
 
 	protected $componentPath;
+
+	public function isSecure(){
+		return true;
+	}
 	
 	public function render(){
 		

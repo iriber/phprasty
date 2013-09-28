@@ -61,10 +61,17 @@ class LinkBuilder{
 	 * 
 	 * @param string $actionName
 	 */
-	public static function getActionUrl($actionName){
+	public static function getActionUrl($actionName, $params=null){
 		$map = RastyMapHelper::getInstance();
 		$webPath = RastyConfig::getInstance()->getWebPath();
-	    return $webPath . $map->getActionUrl( $actionName ) . self::$actionExtension;
+	    
+		$url = $webPath . $map->getActionUrl( $actionName ) . self::$actionExtension;
+		
+		if( !empty($params) ){
+			$url =  self::addParams( $url, $params );
+		}
+		 
+		return $url;
 	}
 	
 	/**
@@ -73,6 +80,7 @@ class LinkBuilder{
 	 * @param string $actionName
 	 */
 	public static function getActionAjaxUrl($actionName, $params=null){
+		
 		$map = RastyMapHelper::getInstance();
 		$webPath = RastyConfig::getInstance()->getWebPath();
 	    
