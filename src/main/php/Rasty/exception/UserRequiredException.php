@@ -11,7 +11,7 @@ use Rasty\i18n\Locale;
 
 class UserRequiredException extends RastyException{
 	
-	public function __construct($msg){
+	public function __construct($msg=""){
 
 		if(empty($msg))
 			$msg = Locale::localize("user.required.exception.msg");
