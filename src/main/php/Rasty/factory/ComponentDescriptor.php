@@ -2,6 +2,8 @@
 
 namespace Rasty\factory;
 
+use Rasty\cache\RastyCache;
+
 /**
  * Archivo de configuraci�n que describe como est� compuesto
  * un componente.
@@ -89,7 +91,33 @@ class ComponentDescriptor{
 		}
 		
 		return $descriptor;
-	}	
+	}
+
+	
+	public static function buildFromFile( $xmlPath ){
+		
+		//chequeamos si está en caché
+		$cache = RastyCache::getInstance();
+		$cacheKey = "RastyComponentDescriptor_$xmlPath";
+		if($cache->contains( $cacheKey ) ){
+
+			$descriptor = $cache->fetch($cacheKey);
+	
+		}else{
+	
+			//cargamos el descriptor del componente
+			$xml = simplexml_load_file( $xmlPath );
+			//construimos el componente contenido.
+			$descriptor = self::build($xml);
+				
+			$cache->save($cacheKey, $descriptor);
+		}
+
+		
+		return $descriptor;
+		
+	}
+	
 }
 
 ?>

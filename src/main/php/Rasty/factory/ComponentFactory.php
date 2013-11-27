@@ -2,6 +2,8 @@
 
 namespace Rasty\factory;
 
+use Rasty\cache\RastyCache;
+
 /**
  * @author bernardo
  */
@@ -20,8 +22,41 @@ class ComponentFactory{
 	
 	public function ComponentFactory(){
 	}
-		
+	
+	/**
+	 * Construye una componente
+	 *
+	 */
 	public static function build( $xml, $config=null, $oParentComponent=null ){
+	
+// 		//chequeamos si está en caché
+// 		$cache = RastyCache::getInstance();
+		
+// 		$cacheKey = "RastyComponent_$xml";
+		
+		
+// 		if($cache->contains($cacheKey) ){
+
+// 			$component = $cache->fetch($cacheKey);
+		
+// 			//TODO setear parámetros al componente.
+//  			self::mergeComponentParams($component, $component->getDescriptor(), $config, $oParentComponent );
+			
+// 		}else{
+	
+// 			$component = self::myBuild($xml, $config, $oParentComponent);
+	
+// 			$cache->save($cacheKey, $component);
+// 		}
+	
+		$component = self::myBuild($xml, $config, $oParentComponent);
+		
+		return $component;
+	}
+	
+	
+		
+	private static function myBuild( $xml, $config=null, $oParentComponent=null ){
 		
 		//construimos el objeto a descriptor a partir del xml.
 		$descriptor = ComponentDescriptor::build( $xml );
@@ -34,7 +69,7 @@ class ComponentFactory{
 		$oComponent = $oClass->newInstance();
 		
 		//inicializamos el componente con el objeto de configuraci�n.
-		
+		$oComponent->setDescriptor($descriptor);
 		$oComponent->setTemplateLocation( $descriptor->getTemplateLocation() );
 
 		//seteamos los parámetros del componente..
@@ -198,15 +233,20 @@ class ComponentFactory{
 			
 		}else{ //sino, construimos el componente dado su type.
 			$map = new RastyMapHelper();
-			$descriptor = $map->getComponentDescriptor( $type );
+			$xmlPath = $map->getComponentDescriptor( $type );
 
 			//Logger::logObject($map);
 			
-			//cargamos el descriptor del componente.
-			$xml = simplexml_load_file( $descriptor  );
+//			//cargamos el descriptor del componente.
+// 			$xml = simplexml_load_file( $xmlPath );
+// 			//construimos el componente contenido.
+// 			$oComponent = ComponentFactory::build( $xml, $componentConfig, $parent );
+
+			//obtenemos el descriptor del componente.
+			$descriptor = self::getDescriptor( $xmlPath );
 			//construimos el componente contenido.
-			$oComponent = ComponentFactory::build( $xml, $componentConfig, $parent );
-			
+			$oComponent = ComponentFactory::buildByDescriptor($descriptor, $componentConfig, $parent );
+					
 		}
 		
 		$oComponent->setId( $id );
@@ -360,6 +400,62 @@ class ComponentFactory{
 			ComponentFactory::setParams( $descriptor->getParams(), $component, $parent);
 		}
 	}
+	
+
+	/**
+	 * esto lo creamos para utiilzar los descriptores almacenados en la caché.
+	 * 
+	 * @param unknown_type $descriptor
+	 * @param unknown_type $config
+	 * @param unknown_type $oParentComponent
+	 * @return object
+	 */
+	public static function buildByDescriptor( $descriptor, $config=null, $oParentComponent=null ){
+	
+		//obtenemos la clase de especificaci�n del componente..
+		$className = $descriptor->getSpecificationClass();
+		
+		//instanciamos el componente por reflection.
+		$oClass = new \ReflectionClass($className);
+		$oComponent = $oClass->newInstance();
+		
+		//inicializamos el componente con el objeto de configuraci�n.
+		$oComponent->setDescriptor($descriptor);
+		$oComponent->setTemplateLocation( $descriptor->getTemplateLocation() );
+
+		//seteamos los parámetros del componente..
+		//tomamos los del descriptor y pisamos los que se redefinan en el config del parent.
+		
+		self::mergeComponentParams($oComponent, $descriptor, $config, $oParentComponent );
+		
+		
+		//vamos a construir cada uno de los componentes que contiene el componente.
+		
+		$map = new RastyMapHelper();
+		
+		//primero buscamos en el descriptor (.rasty)
+		$components = $descriptor->getComponents();
+		if( $components != null )
+		foreach ($descriptor->getComponents() as $componentConfig) {
+
+			//construimos el subcomponente.
+			$oSubcomponent = ComponentFactory::buildByType( $componentConfig, $oComponent  );
+			
+			//agregamos el componente al componente.
+			$oComponent->addComponent( $oSubcomponent );
+		}
+		
+		//TODO buscamos componentes definidos directamente en el template.
+		
+		return $oComponent;
+	}
+	
+	public static function getDescriptor( $xmlPath ){
+		
+		$descriptor = ComponentDescriptor::buildFromFile( $xmlPath );
+		return $descriptor;
+	}
+	
 }
 
 ?>

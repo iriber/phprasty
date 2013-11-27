@@ -23,6 +23,8 @@ abstract class AbstractComponent{
 	protected $components=array();
 
 	protected $componentPath;
+	
+	protected $descriptor;
 
 	public function isSecure(){
 		return true;
@@ -110,6 +112,16 @@ abstract class AbstractComponent{
 	public function getWebPath(){
 		
 		return RastyConfig::getInstance()->getWebPath();
+	}
+
+	public function getDescriptor()
+	{
+	    return $this->descriptor;
+	}
+
+	public function setDescriptor($descriptor)
+	{
+	    $this->descriptor = $descriptor;
 	}
 }
 ?>

@@ -50,7 +50,6 @@ class Application{
 		
 		
 		if( !empty($page)){
-			
 			$page->setForward( $forward );
 			
 			try {

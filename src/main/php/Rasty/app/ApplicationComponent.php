@@ -1,6 +1,10 @@
 <?php
 namespace Rasty\app;
 
+use Rasty\factory\ComponentDescriptor;
+
+use Rasty\utils\RastyCache;
+
 /**
  *  
  * @author bernardo
@@ -42,14 +46,15 @@ class ApplicationComponent extends Application{
 		
 		if( !empty($component)){
 			
-			//obtenemos la ubicación del descriptor del component.
+			//obtenemos el descriptor xml
+// 			$xml = $this->getXml($component, $name);
+	
 			$component_file = $component["app_path"] ."/" . $component["location"] . "/$name.rasty" ;
 			
-			//cargamos el descriptor
-			$xml = simplexml_load_file( $component_file  );
-	
 			//construimos el component dado su descriptor.
-			$oComponent = ComponentFactory::build( $xml );
+// 			$oComponent = ComponentFactory::build( $xml, null, null);
+			$descriptor = ComponentDescriptor::buildFromFile($component_file);
+			$oComponent = ComponentFactory::buildByDescriptor($descriptor);
 			$oComponent->setId($id);
 			
 		
@@ -76,6 +81,33 @@ class ApplicationComponent extends Application{
 			echo "<h1>manejar error not found</h1>";
 		}
 		
+	}
+	
+	private function getXml($component, $name){
+
+// 		//chequeamos si está en caché
+// 		$cache = RastyCache::getInstance();
+// 		if($cache->contains("RastyComponentXML_$name") )
+// 			$xml = $cache->fetch("RastyComponentXML_$name");
+// 		else{
+		
+// 			//obtenemos la ubicación del descriptor del component.
+// 			$component_file = $component["app_path"] ."/" . $component["location"] . "/$name.rasty" ;
+				
+// 			//cargamos el descriptor
+// 			$xml = simplexml_load_file( $component_file  );
+			
+// 			$cache->save("RastyComponentXML_$name", $xml);
+// 		}
+		
+		
+		//obtenemos la ubicación del descriptor del component.
+		$component_file = $component["app_path"] ."/" . $component["location"] . "/$name.rasty" ;
+		
+		//cargamos el descriptor
+		$xml = simplexml_load_file( $component_file  );
+		
+		return $xml;
 	}
 	
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Rasty\app;
 
+use Rasty\cache\RastyCache;
+
 /**
  * Colabora con el mapeo de los componentes.
  * 
@@ -46,7 +48,17 @@ class RastyMapHelper{
 
 	public static function getInstance(){
 		if (  !self::$instance instanceof self ) {
-			self::$instance = new self;
+			
+			$cache = RastyCache::getInstance();
+			if($cache->contains("RastyMapHelper") )
+				self::$instance = $cache->fetch("RastyMapHelper");
+			else{
+			
+				self::$instance = new self;
+			
+				$cache->save("RastyMapHelper", self::$instance );
+			}
+				
 		}
 		
 		return self::$instance;

@@ -1,6 +1,8 @@
 <?php
 namespace Rasty\app;
 
+use Rasty\cache\RastyCache;
+
 use Rasty\conf\RastyConfig;
 
 use Rasty\utils\Logger;
@@ -31,7 +33,17 @@ class LoadRasty{
 
 	public static function getInstance(){
 		if (  !self::$instance instanceof self ) {
-			self::$instance = new self;
+			
+			//chequeamos si está en cache
+			$cache = RastyCache::getInstance();
+			if($cache->contains("LoadRasty") )
+				self::$instance = $cache->fetch("LoadRasty");
+			else{
+				
+				self::$instance = new self;
+				
+				$cache->save("LoadRasty", self::$instance );
+			}
 			//self::$instancia->load();
 			
 		}
